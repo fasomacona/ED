@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.5 Análisis de algoritmos | Tema 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="clasificacion.html">1.1 Clasificación</a>
+        <a href="tda.html">1.2–1.3 TDA</a>
+        <a href="memoria.html">1.4 Memoria</a>
+        <a href="analisis.html" class="active">1.5 Análisis</a>
+        <a href="practica.html">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › 1.5 Análisis de algoritmos
+    </div>
+
+    <h1 class="section-title"><span class="num">1.5</span> Análisis de algoritmos</h1>
+
+    <div class="card">
+      <p>
+        El <strong>análisis de algoritmos</strong> permite predecir y comparar el comportamiento de distintos
+        algoritmos que resuelven el mismo problema, independientemente del hardware o del lenguaje.
+        Nos interesa medir principalmente:
+      </p>
+      <ul>
+        <li><strong>Complejidad en el tiempo:</strong> cuántas operaciones elementales realiza.</li>
+        <li><strong>Complejidad en el espacio:</strong> cuánta memoria adicional utiliza.</li>
+      </ul>
+    </div>
+
+    <!-- Notación Big-O -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">A</span> Notación asintótica (Big-O)</h2>
+      <div class="card">
+        <p>
+          La <strong>notación Big-O</strong> describe el <em>orden de crecimiento</em> de una función cuando
+          el tamaño de la entrada (<em>n</em>) tiende a infinito. Nos da una cota superior del tiempo
+          (o espacio) en el <strong>peor caso</strong>.
+        </p>
+
+        <h4>Órdenes más comunes (de mejor a peor)</h4>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Notación</th>
+                <th>Nombre</th>
+                <th>Ejemplo</th>
+                <th>n = 10</th>
+                <th>n = 1 000</th>
+                <th>n = 1 000 000</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-o1">O(1)</span></td>
+                <td>Constante</td>
+                <td>Acceso a arreglo por índice</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-ologn">O(log n)</span></td>
+                <td>Logarítmica</td>
+                <td>Búsqueda binaria</td>
+                <td>~3</td>
+                <td>~10</td>
+                <td>~20</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-on">O(n)</span></td>
+                <td>Lineal</td>
+                <td>Recorrer una lista</td>
+                <td>10</td>
+                <td>1 000</td>
+                <td>1 000 000</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-onlogn">O(n log n)</span></td>
+                <td>Lineal-logarítmica</td>
+                <td>Merge sort, Heap sort</td>
+                <td>~33</td>
+                <td>~10 000</td>
+                <td>~20 000 000</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-on2">O(n²)</span></td>
+                <td>Cuadrática</td>
+                <td>Burbuja, selección, inserción</td>
+                <td>100</td>
+                <td>1 000 000</td>
+                <td>10¹²</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-on2">O(2ⁿ)</span></td>
+                <td>Exponencial</td>
+                <td>Fuerza bruta (subconjuntos)</td>
+                <td>1 024</td>
+                <td>~10³⁰¹</td>
+                <td>inmenso</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <strong>📌 Regla práctica</strong>
+          Para entradas grandes: preferir O(1) y O(log n); aceptar O(n) y O(n log n); evitar O(n²) y peores
+          cuando n es grande.
+        </div>
+      </div>
+    </section>
+
+    <!-- Complejidad en el tiempo -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">1.5.1</span> Complejidad en el tiempo</h2>
+      <div class="card">
+        <p>
+          Se mide el número de <strong>operaciones elementales</strong> (comparaciones, asignaciones,
+          operaciones aritméticas) en función del tamaño de la entrada <em>n</em>.
+        </p>
+
+        <h4>Casos de análisis</h4>
+        <ul>
+          <li><strong>Mejor caso (Ω):</strong> el escenario más favorable (ej. elemento buscado está al inicio).</li>
+          <li><strong>Caso promedio (Θ):</strong> comportamiento esperado sobre todas las entradas posibles.</li>
+          <li><strong>Peor caso (O):</strong> el escenario más desfavorable (el más usado en la práctica).</li>
+        </ul>
+
+        <h4>Ejemplo: búsqueda lineal</h4>
+<pre><code>def busqueda_lineal(lista, objetivo):
+    for i in range(len(lista)):      # se ejecuta hasta n veces
+        if lista[i] == objetivo:     # comparación
+            return i
+    return -1
+</code></pre>
+        <ul>
+          <li>Mejor caso: elemento en la primera posición → <span class="badge badge-o1">O(1)</span></li>
+          <li>Peor caso: elemento al final o no existe → <span class="badge badge-on">O(n)</span></li>
+          <li>Caso promedio: ≈ n/2 comparaciones → <span class="badge badge-on">O(n)</span></li>
+        </ul>
+
+        <h4>Ejemplo: búsqueda binaria (requiere lista ordenada)</h4>
+<pre><code>def busqueda_binaria(lista, objetivo):
+    izq, der = 0, len(lista) - 1
+    while izq &lt;= der:
+        medio = (izq + der) // 2
+        if lista[medio] == objetivo:
+            return medio
+        elif lista[medio] &lt; objetivo:
+            izq = medio + 1
+        else:
+            der = medio - 1
+    return -1
+</code></pre>
+        <p>En cada paso se reduce a la mitad el intervalo → <span class="badge badge-ologn">O(log n)</span> en el peor caso.</p>
+      </div>
+    </section>
+
+    <!-- Complejidad en el espacio -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">1.5.2</span> Complejidad en el espacio</h2>
+      <div class="card">
+        <p>
+          Mide la cantidad de <strong>memoria adicional</strong> que necesita el algoritmo (además de la
+          entrada). También se expresa con notación Big-O.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Algoritmo / Estructura</th><th>Espacio auxiliar</th><th>Notas</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Búsqueda lineal / binaria</td>
+                <td><span class="badge badge-o1">O(1)</span></td>
+                <td>Solo variables escalares</td>
+              </tr>
+              <tr>
+                <td>Merge sort</td>
+                <td><span class="badge badge-on">O(n)</span></td>
+                <td>Necesita arreglo auxiliar</td>
+              </tr>
+              <tr>
+                <td>Quick sort (promedio)</td>
+                <td><span class="badge badge-ologn">O(log n)</span></td>
+                <td>Profundidad de recursión</td>
+              </tr>
+              <tr>
+                <td>Lista enlazada (n nodos)</td>
+                <td><span class="badge badge-on">O(n)</span></td>
+                <td>Un nodo por elemento + punteros</td>
+              </tr>
+              <tr>
+                <td>Matriz de adyacencia (grafo)</td>
+                <td><span class="badge badge-on2">O(V²)</span></td>
+                <td>V = número de vértices</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warning">
+          <strong>⚠️ Trade-off tiempo–espacio</strong>
+          A menudo se puede mejorar el tiempo usando más memoria (tablas hash, memoización)
+          o reducir memoria sacrificando velocidad. El análisis ayuda a elegir el equilibrio adecuado.
+        </div>
+      </div>
+    </section>
+
+    <!-- Eficiencia -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">1.5.3</span> Eficiencia de los algoritmos</h2>
+      <div class="card">
+        <p>
+          Un algoritmo es <strong>eficiente</strong> si utiliza de forma óptima (o aceptable) los recursos
+          de tiempo y memoria para el tamaño de problema esperado.
+        </p>
+
+        <h4>Cómo comparar dos algoritmos</h4>
+        <ol>
+          <li>Determinar la complejidad temporal y espacial de cada uno (Big-O).</li>
+          <li>Considerar el tamaño típico de las entradas en el problema real.</li>
+          <li>Si las complejidades son similares, medir tiempos reales (benchmarking).</li>
+          <li>Valorar también legibilidad, facilidad de implementación y mantenibilidad.</li>
+        </ol>
+
+        <h4>Ejemplo práctico: dos formas de sumar los elementos de una lista</h4>
+<pre><code># Algoritmo A – iterativo  → O(n) tiempo, O(1) espacio
+def suma_iterativa(lista):
+    total = 0
+    for x in lista:
+        total += x
+    return total
+
+# Algoritmo B – recursivo  → O(n) tiempo, O(n) espacio (pila de llamadas)
+def suma_recursiva(lista):
+    if not lista:
+        return 0
+    return lista[0] + suma_recursiva(lista[1:])
+</code></pre>
+        <p>
+          Ambos son O(n) en tiempo, pero el recursivo usa O(n) de espacio en la pila de llamadas
+          y puede provocar desbordamiento de pila con listas muy grandes. Por tanto, el iterativo
+          es más eficiente en espacio.
+        </p>
+      </div>
+    </section>
+
+    <!-- Reglas para calcular Big-O -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">B</span> Reglas prácticas para calcular Big-O</h2>
+      <div class="card">
+        <ol>
+          <li><strong>Secuencia:</strong> se suma (se toma el término dominante).<br>
+            <code>O(f) + O(g) = O(max(f, g))</code></li>
+          <li><strong>Anidamiento (bucles anidados):</strong> se multiplica.<br>
+            <code>for i in range(n): for j in range(n): ... → O(n²)</code></li>
+          <li><strong>Constantes:</strong> se ignoran.<br>
+            <code>O(3n + 5) = O(n)</code></li>
+          <li><strong>Términos de menor orden:</strong> se eliminan.<br>
+            <code>O(n² + n log n + n) = O(n²)</code></li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="callout success">
+      <strong>📝 Actividad de aprendizaje sugerida</strong>
+      Identificar la eficiencia de dos algoritmos distintos que resuelven un mismo problema y elaborar
+      un cuadro comparativo (actividad del programa de la asignatura).
+    </div>
+
+    <div class="btn-group">
+      <a href="memoria.html" class="btn btn-outline">← 1.4 Memoria</a>
+      <a href="practica.html" class="btn btn-primary">Ir a la práctica (Jupyter) →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Tema 1.5</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

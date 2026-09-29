@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.4 Manejo de memoria | Tema 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="clasificacion.html">1.1 Clasificación</a>
+        <a href="tda.html">1.2–1.3 TDA</a>
+        <a href="memoria.html" class="active">1.4 Memoria</a>
+        <a href="analisis.html">1.5 Análisis</a>
+        <a href="practica.html">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › 1.4 Manejo de memoria
+    </div>
+
+    <h1 class="section-title"><span class="num">1.4</span> Manejo de memoria</h1>
+
+    <div class="card">
+      <p>
+        La forma en que una estructura de datos gestiona la memoria determina su <strong>flexibilidad</strong>,
+        <strong>eficiencia</strong> y <strong>seguridad</strong>. Existen dos enfoques fundamentales:
+        <strong>memoria estática</strong> y <strong>memoria dinámica</strong>.
+      </p>
+    </div>
+
+    <!-- Organización de memoria -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">A</span> Organización típica de la memoria de un proceso</h2>
+      <div class="card">
+        <div class="diagram" style="text-align: left; line-height: 1.9;">
+┌─────────────────────────────┐  ← Direcciones altas<br>
+│     Stack (pila de llamadas) │  Variables locales, parámetros,<br>
+│     ↓ crece hacia abajo      │  direcciones de retorno<br>
+├─────────────────────────────┤<br>
+│                             │<br>
+│     (espacio libre)         │<br>
+│                             │<br>
+├─────────────────────────────┤<br>
+│     Heap (montículo)         │  Memoria dinámica (malloc/new)<br>
+│     ↑ crece hacia arriba     │  Listas, árboles, objetos…<br>
+├─────────────────────────────┤<br>
+│     Datos estáticos / BSS    │  Variables globales y estáticas<br>
+├─────────────────────────────┤<br>
+│     Código (text)            │  Instrucciones del programa<br>
+└─────────────────────────────┘  ← Direcciones bajas
+        </div>
+        <ul style="margin-top: 1rem;">
+          <li><strong>Stack:</strong> asignación automática, muy rápida, tamaño limitado. Se libera al salir de la función.</li>
+          <li><strong>Heap:</strong> asignación manual (o por el runtime), más flexible, puede fragmentarse, requiere gestión.</li>
+          <li><strong>Datos estáticos:</strong> existen durante toda la vida del programa.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Memoria estática -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">1.4.1</span> Memoria estática</h2>
+      <div class="card">
+        <p>
+          En la memoria estática el <strong>tamaño se conoce en tiempo de compilación</strong> (o al crear la estructura)
+          y <strong>no cambia durante la ejecución</strong>. La reserva se hace de una sola vez.
+        </p>
+
+        <h4>Características</h4>
+        <ul>
+          <li>Bloque de memoria <strong>contiguo</strong></li>
+          <li>Acceso por <strong>índice</strong> en tiempo constante O(1)</li>
+          <li>No hay sobrecarga de punteros por elemento</li>
+          <li>Riesgo de <strong>desperdicio</strong> (si se reserva de más) o de <strong>desbordamiento</strong> (si se necesita más espacio)</li>
+        </ul>
+
+        <h4>Ejemplo en C</h4>
+<pre><code>// Arreglo estático: tamaño fijo en tiempo de compilación
+#define MAX 100
+int vector[MAX];          // 100 enteros en el stack o data segment
+int n = 0;                // cantidad de elementos usados
+
+void insertar(int valor) {
+    if (n &lt; MAX) {
+        vector[n++] = valor;
+    } else {
+        // ¡No hay espacio!
+    }
+}
+</code></pre>
+
+        <h4>Ejemplo en Python (simulación de estático)</h4>
+<pre><code># En Python no hay arreglos estáticos nativos, pero podemos simular
+# un vector de capacidad fija:
+class VectorEstatico:
+    def __init__(self, capacidad):
+        self._datos = [None] * capacidad
+        self._capacidad = capacidad
+        self._n = 0
+
+    def insertar(self, valor):
+        if self._n &gt;= self._capacidad:
+            raise OverflowError("Capacidad agotada")
+        self._datos[self._n] = valor
+        self._n += 1
+</code></pre>
+
+        <div class="callout warning">
+          <strong>⚠️ Limitación principal</strong>
+          Si en tiempo de ejecución se necesitan más elementos de los reservados, el programa falla
+          o hay que crear un nuevo arreglo más grande y copiar (lo cual ya es comportamiento dinámico).
+        </div>
+      </div>
+    </section>
+
+    <!-- Memoria dinámica -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">1.4.2</span> Memoria dinámica</h2>
+      <div class="card">
+        <p>
+          En la memoria dinámica el tamaño <strong>puede cambiar durante la ejecución</strong>.
+          Se solicita memoria al sistema operativo (o al runtime) cuando se necesita y se libera
+          cuando ya no se usa.
+        </p>
+
+        <h4>Características</h4>
+        <ul>
+          <li>Asignación en el <strong>heap</strong></li>
+          <li>Permite estructuras de tamaño variable (listas, árboles, grafos)</li>
+          <li>Cada nodo suele contener <strong>punteros/referencias</strong> adicionales</li>
+          <li>Requiere gestión cuidadosa (fugas de memoria, punteros colgantes, fragmentación)</li>
+        </ul>
+
+        <h4>Mecanismos según el lenguaje</h4>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Lenguaje</th><th>Asignar</th><th>Liberar</th><th>Gestión</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>C</td><td><code>malloc()</code> / <code>calloc()</code></td><td><code>free()</code></td><td>Manual</td></tr>
+              <tr><td>C++</td><td><code>new</code></td><td><code>delete</code></td><td>Manual (o smart pointers)</td></tr>
+              <tr><td>Java / C#</td><td><code>new</code></td><td>Automático (GC)</td><td>Recolector de basura</td></tr>
+              <tr><td>Python</td><td>Automático</td><td>Automático (GC + refcount)</td><td>Recolector de basura</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Ejemplo: nodo de lista enlazada (Python)</h4>
+<pre><code>class Nodo:
+    def __init__(self, dato):
+        self.dato = dato
+        self.siguiente = None   # referencia al siguiente nodo
+
+class ListaEnlazada:
+    def __init__(self):
+        self.cabeza = None
+
+    def insertar_inicio(self, dato):
+        nuevo = Nodo(dato)          # se crea en el heap
+        nuevo.siguiente = self.cabeza
+        self.cabeza = nuevo
+
+    def mostrar(self):
+        actual = self.cabeza
+        while actual:
+            print(actual.dato, end=" → ")
+            actual = actual.siguiente
+        print("None")
+</code></pre>
+
+        <div class="diagram">
+cabeza → [10 | •] → [20 | •] → [30 | None]<br>
+<span style="opacity:0.6">Cada nodo se crea dinámicamente en el heap</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparación -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">B</span> Comparación directa</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aspecto</th>
+              <th>Memoria estática</th>
+              <th>Memoria dinámica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Momento de reserva</td>
+              <td>Compilación / creación</td>
+              <td>Tiempo de ejecución</td>
+            </tr>
+            <tr>
+              <td>Tamaño</td>
+              <td>Fijo</td>
+              <td>Variable</td>
+            </tr>
+            <tr>
+              <td>Velocidad de acceso</td>
+              <td>Muy alta (índice)</td>
+              <td>Depende (puede ser O(n))</td>
+            </tr>
+            <tr>
+              <td>Uso de memoria</td>
+              <td>Puede desperdiciar</td>
+              <td>Más ajustado a la necesidad</td>
+            </tr>
+            <tr>
+              <td>Gestión</td>
+              <td>Automática (stack)</td>
+              <td>Manual o por GC</td>
+            </tr>
+            <tr>
+              <td>Riesgos</td>
+              <td>Desbordamiento, desperdicio</td>
+              <td>Fugas, fragmentación, dangling pointers</td>
+            </tr>
+            <tr>
+              <td>Ideal para</td>
+              <td>Tamaños conocidos y estables</td>
+              <td>Tamaños impredecibles o variables</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Vectores dinámicos -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">C</span> Caso especial: vectores dinámicos (arreglos redimensionables)</h2>
+      <div class="card">
+        <p>
+          Estructuras como <code>std::vector</code> (C++), <code>ArrayList</code> (Java) o <code>list</code> (Python)
+          combinan lo mejor de ambos mundos:
+        </p>
+        <ul>
+          <li>Almacenan elementos en un <strong>bloque contiguo</strong> (acceso O(1)).</li>
+          <li>Cuando se llena la capacidad, se <strong>reserva un bloque más grande</strong> (típicamente el doble),
+              se copian los elementos y se libera el anterior.</li>
+          <li>La inserción al final es <strong>O(1) amortizado</strong>.</li>
+        </ul>
+<pre><code># Python: list es un vector dinámico
+v = []
+for i in range(10):
+    v.append(i)   # crece automáticamente cuando es necesario
+print(v)          # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(len(v))     # 10
+</code></pre>
+      </div>
+    </section>
+
+    <div class="callout success">
+      <strong>📝 Actividades de aprendizaje sugeridas</strong>
+      <ul>
+        <li>Discutir en plenaria las diferencias entre el manejo de memoria estática y dinámica, así como ventajas y desventajas.</li>
+        <li>Escribir un programa para la generación de vectores en tiempo de ejecución.</li>
+        <li>Escribir un programa que ejemplifique el uso de la memoria dinámica.</li>
+      </ul>
+    </div>
+
+    <div class="btn-group">
+      <a href="tda.html" class="btn btn-outline">← 1.2–1.3 TDA</a>
+      <a href="analisis.html" class="btn btn-primary">Siguiente: 1.5 Análisis de algoritmos →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Tema 1.4</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

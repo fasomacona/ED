@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica · Tema 1 | Estructura de Datos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="clasificacion.html">1.1 Clasificación</a>
+        <a href="tda.html">1.2–1.3 TDA</a>
+        <a href="memoria.html">1.4 Memoria</a>
+        <a href="analisis.html">1.5 Análisis</a>
+        <a href="practica.html" class="active">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › Parte práctica (Jupyter Notebook)
+    </div>
+
+    <h1 class="section-title"><span class="num">💻</span> Parte práctica — Jupyter Notebook</h1>
+
+    <div class="card">
+      <p>
+        Esta sección contiene ejercicios prácticos alineados con las actividades de aprendizaje del
+        Tema 1. El notebook está listo para ejecutarse en <strong>Jupyter Notebook</strong>,
+        <strong>JupyterLab</strong>, <strong>Google Colab</strong> o <strong>VS Code</strong>.
+      </p>
+    </div>
+
+    <!-- Cómo usar -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">1</span> Cómo usar el notebook</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Opción A — Local</h3>
+          <ol>
+            <li>Clona o descarga este repositorio.</li>
+            <li>Instala Jupyter si no lo tienes:
+              <pre style="margin:0.5rem 0"><code>pip install jupyter</code></pre>
+            </li>
+            <li>Abre el notebook:
+              <pre style="margin:0.5rem 0"><code>jupyter notebook notebooks/practica_tema1.ipynb</code></pre>
+            </li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Opción B — Google Colab</h3>
+          <ol>
+            <li>Sube el archivo <code>practica_tema1.ipynb</code> a Google Drive.</li>
+            <li>Ábrelo con Google Colab (clic derecho → Abrir con → Colaboratory).</li>
+            <li>Ejecuta las celdas en orden.</li>
+          </ol>
+        </div>
+      </div>
+      <p style="margin-top: 1rem;">
+        <a href="notebooks/practica_tema1.ipynb" class="btn btn-primary" download>⬇️ Descargar practica_tema1.ipynb</a>
+      </p>
+    </section>
+
+    <!-- Contenido del notebook -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">2</span> Contenido del notebook</h2>
+
+      <div class="card">
+        <h3>Ejercicio 1 — Clasificación de estructuras</h3>
+        <p>Identificar y clasificar estructuras de datos según linealidad, tamaño y homogeneidad.</p>
+      </div>
+
+      <div class="card">
+        <h3>Ejercicio 2 — Implementar un TDA (Pila)</h3>
+        <p>
+          Implementar el TDA Pila con operaciones <code>push</code>, <code>pop</code>, <code>top</code>,
+          <code>is_empty</code> y <code>size</code>. Probarlo con casos de uso.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Ejercicio 3 — Memoria estática vs dinámica</h3>
+        <p>
+          Comparar un vector de capacidad fija con una lista dinámica de Python.
+          Observar qué ocurre al superar la capacidad y medir el crecimiento.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Ejercicio 4 — Análisis de complejidad</h3>
+        <p>
+          Implementar búsqueda lineal y búsqueda binaria. Medir tiempos reales con
+          <code>time.perf_counter</code> para distintos tamaños de entrada y elaborar un
+          cuadro comparativo.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Ejercicio 5 — Reto integrador</h3>
+        <p>
+          Diseñar un TDA simple (por ejemplo, una Cola o un Conjunto) eligiendo representación
+          estática o dinámica, justificar la decisión e indicar la complejidad de cada operación.
+        </p>
+      </div>
+    </section>
+
+    <!-- Evaluación -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">3</span> Criterios de evaluación sugeridos</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th>Peso</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Correctitud del código</td>
+              <td>40 %</td>
+              <td>Las operaciones del TDA y los algoritmos funcionan según la especificación.</td>
+            </tr>
+            <tr>
+              <td>Análisis de complejidad</td>
+              <td>25 %</td>
+              <td>Se identifica correctamente Big-O y se justifica.</td>
+            </tr>
+            <tr>
+              <td>Comparación y conclusiones</td>
+              <td>20 %</td>
+              <td>Cuadros comparativos claros y conclusiones coherentes.</td>
+            </tr>
+            <tr>
+              <td>Claridad y estilo</td>
+              <td>15 %</td>
+              <td>Código legible, comentarios y nombres significativos.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Prácticas del programa -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">4</span> Prácticas del programa de la asignatura</h2>
+      <div class="card">
+        <p>El programa oficial sugiere (entre otras) las siguientes prácticas relacionadas con el Tema 1:</p>
+        <ul>
+          <li>Desarrollar una aplicación donde se utilicen TDA para comprobar el comportamiento estático y dinámico.</li>
+          <li>Identificar la eficiencia de dos algoritmos distintos que resuelven un mismo problema y elaborar un cuadro comparativo.</li>
+        </ul>
+        <p>El notebook cubre estos puntos de forma guiada y extensible.</p>
+      </div>
+    </section>
+
+    <div class="btn-group">
+      <a href="analisis.html" class="btn btn-outline">← 1.5 Análisis</a>
+      <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div><strong>Estructura de Datos (AED-1026)</strong> · Práctica Tema 1</div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

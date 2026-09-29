@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.1 Clasificación de las estructuras de datos | Tema 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">ED</span>
+        Estructura de Datos
+      </a>
+      <nav>
+        <a href="index.html">Inicio</a>
+        <a href="clasificacion.html" class="active">1.1 Clasificación</a>
+        <a href="tda.html">1.2–1.3 TDA</a>
+        <a href="memoria.html">1.4 Memoria</a>
+        <a href="analisis.html">1.5 Análisis</a>
+        <a href="practica.html">Práctica</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 2rem;">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a> › 1.1 Clasificación de las estructuras de datos
+    </div>
+
+    <h1 class="section-title"><span class="num">1.1</span> Clasificación de las estructuras de datos</h1>
+
+    <div class="card">
+      <p>
+        Una <strong>estructura de datos</strong> es una forma particular de organizar, almacenar y manipular
+        datos en la memoria de una computadora, de manera que se puedan usar de forma eficiente.
+        La elección de la estructura correcta depende de las operaciones que se necesiten realizar
+        (inserción, eliminación, búsqueda, recorrido, ordenamiento, etc.).
+      </p>
+    </div>
+
+    <!-- Criterios de clasificación -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">A</span> Criterios de clasificación</h2>
+      <p>Las estructuras de datos se clasifican según varios criterios independientes:</p>
+
+      <div class="grid-2" style="margin-top: 1.25rem;">
+        <div class="feature-card">
+          <div class="icon">📏</div>
+          <h3>Por linealidad</h3>
+          <p><strong>Lineales</strong> vs <strong>No lineales</strong>. Indica si los elementos forman una secuencia o una jerarquía/red.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📐</div>
+          <h3>Por tamaño en memoria</h3>
+          <p><strong>Estáticas</strong> vs <strong>Dinámicas</strong>. Indica si el tamaño se fija en tiempo de compilación o puede cambiar en ejecución.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔢</div>
+          <h3>Por tipo de dato</h3>
+          <p><strong>Homogéneas</strong> vs <strong>Heterogéneas</strong>. Todos los elementos del mismo tipo o de tipos distintos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔗</div>
+          <h3>Por forma de acceso</h3>
+          <p>Acceso <strong>secuencial</strong>, <strong>directo</strong> o por <strong>clave</strong> (hash).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lineales vs No lineales -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">B</span> Estructuras lineales vs no lineales</h2>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>📐 Estructuras lineales</h3>
+          <p>Los elementos se organizan en una <strong>secuencia</strong>: cada elemento tiene un predecesor y un sucesor (excepto extremos).</p>
+          <h4>Ejemplos</h4>
+          <ul>
+            <li><strong>Arreglos (arrays / vectores)</strong></li>
+            <li><strong>Listas enlazadas</strong> (simples, dobles, circulares)</li>
+            <li><strong>Pilas (stacks)</strong> — LIFO</li>
+            <li><strong>Colas (queues)</strong> — FIFO</li>
+          </ul>
+          <div class="diagram">
+            [A] → [B] → [C] → [D] → [E]<br>
+            <span style="opacity:0.6">Lista / Arreglo (secuencia)</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>🌳 Estructuras no lineales</h3>
+          <p>Los elementos se organizan en <strong>jerarquías</strong> o <strong>redes</strong>. Un elemento puede tener varios predecesores o sucesores.</p>
+          <h4>Ejemplos</h4>
+          <ul>
+            <li><strong>Árboles</strong> (binarios, AVL, B-trees, heaps)</li>
+            <li><strong>Grafos</strong> (dirigidos, no dirigidos, ponderados)</li>
+            <li><strong>Tablas hash</strong> (en algunos contextos se consideran no lineales)</li>
+          </ul>
+          <div class="diagram">
+            &nbsp;&nbsp;&nbsp;&nbsp;[A]<br>
+            &nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\<br>
+            [B]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[C]<br>
+            /&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br>
+            [D][E]&nbsp;&nbsp;&nbsp;[F]<br>
+            <span style="opacity:0.6">Árbol binario</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estáticas vs Dinámicas -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">C</span> Estructuras estáticas vs dinámicas</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Característica</th>
+              <th>Estáticas</th>
+              <th>Dinámicas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tamaño</strong></td>
+              <td>Fijo en tiempo de compilación (o creación)</td>
+              <td>Puede crecer o reducirse en tiempo de ejecución</td>
+            </tr>
+            <tr>
+              <td><strong>Memoria</strong></td>
+              <td>Reserva de bloque contiguo (stack o data segment)</td>
+              <td>Asignación en heap (malloc, new, etc.)</td>
+            </tr>
+            <tr>
+              <td><strong>Acceso</strong></td>
+              <td>Generalmente acceso directo por índice O(1)</td>
+              <td>Puede requerir recorrido O(n) (listas enlazadas)</td>
+            </tr>
+            <tr>
+              <td><strong>Ventajas</strong></td>
+              <td>Rápidas, predecibles, sin sobrecarga de punteros</td>
+              <td>Flexibles, usan solo la memoria necesaria</td>
+            </tr>
+            <tr>
+              <td><strong>Desventajas</strong></td>
+              <td>Desperdicio o falta de espacio si el tamaño es incorrecto</td>
+              <td>Sobrecarga de gestión, posible fragmentación</td>
+            </tr>
+            <tr>
+              <td><strong>Ejemplos</strong></td>
+              <td>Arreglos estáticos, matrices fijas</td>
+              <td>Listas enlazadas, árboles, vectores dinámicos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>💡 Nota importante</strong>
+        En lenguajes como Python, las “listas” (<code>list</code>) son en realidad arreglos dinámicos
+        (vectores redimensionables). En C/C++ un arreglo clásico es estático, mientras que
+        <code>std::vector</code> o listas con punteros son dinámicos.
+      </div>
+    </section>
+
+    <!-- Homogéneas vs Heterogéneas -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">D</span> Homogéneas vs heterogéneas</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Homogéneas</h3>
+          <p>Todos los elementos son del <strong>mismo tipo de dato</strong>.</p>
+          <ul>
+            <li>Arreglo de enteros: <code>int a[10]</code></li>
+            <li>Lista de cadenas: <code>List&lt;String&gt;</code></li>
+            <li>Matriz de flotantes</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Heterogéneas</h3>
+          <p>Los elementos pueden ser de <strong>tipos distintos</strong>.</p>
+          <ul>
+            <li>Registros / estructuras (<code>struct</code>, <code>class</code>)</li>
+            <li>Tuplas en Python: <code>(1, "hola", 3.14)</code></li>
+            <li>Objetos con atributos de distintos tipos</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cuadro sinóptico -->
+    <section class="section">
+      <h2 class="section-title"><span class="num">E</span> Cuadro sinóptico resumido</h2>
+      <div class="card">
+        <div class="diagram" style="text-align: left; line-height: 1.8;">
+<strong>ESTRUCTURAS DE DATOS</strong><br>
+├── <strong>Lineales</strong><br>
+│&nbsp;&nbsp;&nbsp;├── Estáticas → Arreglos / Vectores fijos<br>
+│&nbsp;&nbsp;&nbsp;└── Dinámicas → Listas enlazadas, Pilas, Colas (implementadas con punteros)<br>
+│<br>
+└── <strong>No lineales</strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── Árboles → Binarios, AVL, Heaps, B-trees<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── Grafos → Dirigidos, no dirigidos, ponderados
+        </div>
+      </div>
+    </section>
+
+    <!-- Actividad sugerida -->
+    <div class="callout success">
+      <strong>📝 Actividad de aprendizaje sugerida</strong>
+      Investigar las diferentes estructuras de datos y su clasificación para elaborar un cuadro sinóptico
+      (actividad del programa de la asignatura). Puedes usar el diagrama anterior como base y ampliarlo.
+    </div>
+
+    <div class="btn-group">
+      <a href="index.html" class="btn btn-outline">← Inicio</a>
+      <a href="tda.html" class="btn btn-primary">Siguiente: 1.2 Tipos de Datos Abstractos →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div>
+        <strong>Estructura de Datos (AED-1026)</strong> · Tema 1.1
+      </div>
+      <div>Material didáctico abierto</div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

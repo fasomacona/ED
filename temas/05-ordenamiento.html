@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5. Métodos de ordenamiento | AED-1026</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">📚 Estructura de Datos <span>AED-1026</span></a>
+      <nav>
+        <a href="../index.html">Inicio</a>
+        <a href="../index.html#temario">Temario</a>
+        <a href="../notebooks/">Notebooks</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> › Tema 5</div>
+      <h1>5. Métodos de ordenamiento</h1>
+    </div>
+  </div>
+
+  <main class="container content">
+    <p>
+      Ordenar datos es una de las operaciones más frecuentes en computación. 
+      Estudiamos algoritmos <strong>internos</strong> (todo cabe en memoria principal) 
+      y <strong>externos</strong> (usan memoria secundaria / archivos).
+    </p>
+
+    <h2>Subtemas</h2>
+    <ul class="subtema-list">
+      <li><a href="#5-1"><span class="num">5.1</span> Algoritmos de ordenamiento internos</a></li>
+      <li><a href="#5-2"><span class="num">5.2</span> Algoritmos de ordenamiento externos</a></li>
+    </ul>
+
+    <!-- 5.1 Internos -->
+    <h2 id="5-1">5.1 Algoritmos de ordenamiento internos</h2>
+
+    <h3>5.1.1 Burbuja (Bubble Sort)</h3>
+    <p>Compara pares adyacentes e intercambia si están en el orden incorrecto. Muy simple pero ineficiente: O(n²).</p>
+<pre><code>def burbuja(lista):
+    n = len(lista)
+    for i in range(n):
+        intercambio = False
+        for j in range(0, n - i - 1):
+            if lista[j] &gt; lista[j + 1]:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+                intercambio = True
+        if not intercambio:          # optimización: ya está ordenada
+            break
+    return lista
+
+print(burbuja([64, 34, 25, 12, 22, 11, 90]))
+</code></pre>
+
+    <h3>5.1.2 Quicksort</h3>
+    <p>
+      Divide y vencerás. Elige un pivote, particiona el arreglo y ordena recursivamente. 
+      Promedio O(n log n), peor caso O(n²).
+    </p>
+<pre><code>def quicksort(lista):
+    if len(lista) &lt;= 1:
+        return lista
+    pivote = lista[len(lista) // 2]
+    menores = [x for x in lista if x &lt; pivote]
+    iguales = [x for x in lista if x == pivote]
+    mayores = [x for x in lista if x &gt; pivote]
+    return quicksort(menores) + iguales + quicksort(mayores)
+
+print(quicksort([64, 34, 25, 12, 22, 11, 90]))
+</code></pre>
+
+    <h3>Versión in-place (más eficiente en memoria)</h3>
+<pre><code>def quicksort_inplace(lista, bajo=0, alto=None):
+    if alto is None:
+        alto = len(lista) - 1
+    if bajo &lt; alto:
+        pivote = particionar(lista, bajo, alto)
+        quicksort_inplace(lista, bajo, pivote - 1)
+        quicksort_inplace(lista, pivote + 1, alto)
+    return lista
+
+def particionar(lista, bajo, alto):
+    pivote = lista[alto]
+    i = bajo - 1
+    for j in range(bajo, alto):
+        if lista[j] &lt;= pivote:
+            i += 1
+            lista[i], lista[j] = lista[j], lista[i]
+    lista[i + 1], lista[alto] = lista[alto], lista[i + 1]
+    return i + 1
+</code></pre>
+
+    <h3>5.1.3 Shell Sort</h3>
+    <p>Mejora de inserción directa. Compara elementos separados por un “gap” que se reduce progresivamente.</p>
+<pre><code>def shell_sort(lista):
+    n = len(lista)
+    gap = n // 2
+    while gap &gt; 0:
+        for i in range(gap, n):
+            temp = lista[i]
+            j = i
+            while j &gt;= gap and lista[j - gap] &gt; temp:
+                lista[j] = lista[j - gap]
+                j -= gap
+            lista[j] = temp
+        gap //= 2
+    return lista
+
+print(shell_sort([64, 34, 25, 12, 22, 11, 90]))
+</code></pre>
+
+    <h3>5.1.4 Radix Sort</h3>
+    <p>
+      Ordena enteros dígito a dígito (por posiciones). No compara elementos entre sí. 
+      Complejidad O(d · (n + k)) donde d es el número de dígitos.
+    </p>
+<pre><code>def counting_sort_por_digito(lista, exp):
+    n = len(lista)
+    salida = [0] * n
+    conteo = [0] * 10
+    
+    for i in range(n):
+        indice = (lista[i] // exp) % 10
+        conteo[indice] += 1
+    
+    for i in range(1, 10):
+        conteo[i] += conteo[i - 1]
+    
+    for i in range(n - 1, -1, -1):
+        indice = (lista[i] // exp) % 10
+        salida[conteo[indice] - 1] = lista[i]
+        conteo[indice] -= 1
+    
+    for i in range(n):
+        lista[i] = salida[i]
+
+def radix_sort(lista):
+    if not lista:
+        return lista
+    maximo = max(lista)
+    exp = 1
+    while maximo // exp &gt; 0:
+        counting_sort_por_digito(lista, exp)
+        exp *= 10
+    return lista
+
+print(radix_sort([170, 45, 75, 90, 802, 24, 2, 66]))
+</code></pre>
+
+    <h3>Cuadro comparativo de algoritmos internos</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Algoritmo</th>
+          <th>Mejor caso</th>
+          <th>Caso promedio</th>
+          <th>Peor caso</th>
+          <th>Espacio</th>
+          <th>Estable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Burbuja</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Sí</td></tr>
+        <tr><td>Quicksort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>No</td></tr>
+        <tr><td>Shell</td><td>O(n log n)</td><td>≈ O(n^1.3)</td><td>O(n²)</td><td>O(1)</td><td>No</td></tr>
+        <tr><td>Radix</td><td>O(d·n)</td><td>O(d·n)</td><td>O(d·n)</td><td>O(n+k)</td><td>Sí</td></tr>
+        <tr><td>Merge sort*</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>Sí</td></tr>
+      </tbody>
+    </table>
+    <p><small>* Merge sort se usa también como base de los externos.</small></p>
+
+    <!-- 5.2 Externos -->
+    <h2 id="5-2">5.2 Algoritmos de ordenamiento externos</h2>
+    <p>
+      Cuando los datos no caben en memoria principal se utilizan algoritmos que trabajan 
+      con archivos o bloques. La idea principal es <strong>dividir, ordenar en memoria 
+      y luego fusionar (merge)</strong>.
+    </p>
+
+    <h3>5.2.1 Intercalación (Merge simple)</h3>
+    <p>Fusiona dos (o más) secuencias ya ordenadas en una sola secuencia ordenada.</p>
+<pre><code>def intercalacion(a, b):
+    """Fusiona dos listas ordenadas."""
+    resultado = []
+    i = j = 0
+    while i &lt; len(a) and j &lt; len(b):
+        if a[i] &lt;= b[j]:
+            resultado.append(a[i])
+            i += 1
+        else:
+            resultado.append(b[j])
+            j += 1
+    resultado.extend(a[i:])
+    resultado.extend(b[j:])
+    return resultado
+
+print(intercalacion([1, 3, 5, 7], [2, 4, 6, 8, 10]))
+</code></pre>
+
+    <h3>5.2.2 Mezcla Directa (Direct Merge)</h3>
+    <p>
+      Divide el archivo en bloques de tamaño 1, 2, 4, 8…, ordena cada bloque 
+      y luego los fusiona sucesivamente hasta obtener el archivo completo ordenado.
+    </p>
+<pre><code>def mezcla_directa(lista):
+    """Simulación de mezcla directa en memoria (para entender el algoritmo)."""
+    n = len(lista)
+    ancho = 1
+    while ancho &lt; n:
+        for i in range(0, n, 2 * ancho):
+            izquierda = lista[i:i + ancho]
+            derecha = lista[i + ancho:i + 2 * ancho]
+            lista[i:i + 2 * ancho] = intercalacion(izquierda, derecha)
+        ancho *= 2
+    return lista
+
+print(mezcla_directa([38, 27, 43, 3, 9, 82, 10]))
+</code></pre>
+
+    <h3>5.2.3 Mezcla Natural</h3>
+    <p>
+      Aprovecha las secuencias ya ordenadas (runs) que existen de forma natural en los datos. 
+      Suele requerir menos pasadas que la mezcla directa cuando hay orden parcial.
+    </p>
+
+    <div class="note">
+      <strong>📌 Nota práctica</strong>
+      En Python real, para archivos grandes se usa el módulo <code class="inline-code">heapq.merge</code> 
+      o se implementan runs con archivos temporales. En este curso nos centramos en la lógica.
+    </div>
+
+    <h3>Ejercicios</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio 5.1</strong>
+      Implementa Burbuja, Quicksort y Shell Sort. Mide el tiempo para listas de 1 000, 5 000 y 10 000 
+      elementos generados aleatoriamente. Elabora una tabla comparativa.
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 5.2</strong>
+      Modifica Quicksort para que use como pivote el elemento mediano de tres (primer, medio y último).
+    </div>
+
+    <!-- Práctica -->
+    <h2>Práctica del Tema 5</h2>
+    <div class="practice">
+      <strong>🧪 Práctica 5 – Ordenamiento</strong>
+      <p>Abre el notebook <a href="../notebooks/05_practica_ordenamiento.ipynb" class="jupyter-badge">📓 05_practica_ordenamiento.ipynb</a></p>
+      <ol>
+        <li>Implementa los cuatro algoritmos internos vistos y genera un cuadro comparativo de tiempos 
+            para datos aleatorios, ordenados y en orden inverso (tamaños 2 000 y 8 000).</li>
+        <li>Implementa intercalación y mezcla directa. Verifica que produzcan el mismo resultado que 
+            la función <code>sorted()</code> de Python.</li>
+        <li>Discute en el notebook cuándo preferirías cada algoritmo según el tamaño y el estado inicial de los datos.</li>
+      </ol>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="04-estructuras-no-lineales.html" class="btn btn-outline">← Tema 4</a>
+      <a href="06-busqueda.html" class="btn btn-primary">Siguiente: Métodos de búsqueda →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Tema 5 · Estructura de Datos (AED-1026) · Tecnológico Nacional de México</p>
+        <p>© 2026 TecNM · Adaptado a Python + Jupyter · Autor: Fabián Soberanes Matín</p>
+  </footer>
+</body>
+</html>

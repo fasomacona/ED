@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4. Estructuras no lineales | AED-1026</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">📚 Estructura de Datos <span>AED-1026</span></a>
+      <nav>
+        <a href="../index.html">Inicio</a>
+        <a href="../index.html#temario">Temario</a>
+        <a href="../notebooks/">Notebooks</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> › Tema 4</div>
+      <h1>4. Estructuras no lineales</h1>
+    </div>
+  </div>
+
+  <main class="container content">
+    <p>
+      Las estructuras no lineales permiten representar relaciones jerárquicas (árboles) 
+      o de red (grafos). Son fundamentales para modelar problemas del mundo real más complejos.
+    </p>
+
+    <h2>Subtemas</h2>
+    <ul class="subtema-list">
+      <li><a href="#4-1"><span class="num">4.1</span> Árboles</a></li>
+      <li><a href="#4-2"><span class="num">4.2</span> Grafos</a></li>
+    </ul>
+
+    <!-- 4.1 Árboles -->
+    <h2 id="4-1">4.1 Árboles</h2>
+    <p>
+      Un <strong>árbol</strong> es una estructura jerárquica de nodos conectados por aristas, 
+      sin ciclos. Existe un nodo especial llamado <strong>raíz</strong>.
+    </p>
+
+    <h3>4.1.1 Clasificación de árboles</h3>
+    <ul>
+      <li><strong>Árbol general</strong>: cada nodo puede tener cualquier número de hijos.</li>
+      <li><strong>Árbol binario</strong>: cada nodo tiene como máximo dos hijos (izquierdo y derecho).</li>
+      <li><strong>Árbol binario de búsqueda (ABB)</strong>: para cada nodo, los valores del subárbol izquierdo 
+          son menores y los del derecho mayores.</li>
+      <li><strong>Árbol balanceado</strong> (AVL, Rojo-Negro): mantiene altura equilibrada para garantizar O(log n).</li>
+      <li><strong>Montículo (Heap)</strong>: árbol binario completo con propiedad de orden (min o max).</li>
+    </ul>
+
+    <h3>Nodo de árbol binario</h3>
+<pre><code>class NodoArbol:
+    def __init__(self, valor):
+        self.valor = valor
+        self.izq = None
+        self.der = None
+</code></pre>
+
+    <h3>4.1.2 Operaciones básicas sobre árboles binarios</h3>
+
+    <h4>Árbol binario de búsqueda – inserción y búsqueda</h4>
+<pre><code>class ABB:
+    def __init__(self):
+        self.raiz = None
+    
+    def insertar(self, valor):
+        self.raiz = self._insertar(self.raiz, valor)
+    
+    def _insertar(self, nodo, valor):
+        if nodo is None:
+            return NodoArbol(valor)
+        if valor &lt; nodo.valor:
+            nodo.izq = self._insertar(nodo.izq, valor)
+        elif valor &gt; nodo.valor:
+            nodo.der = self._insertar(nodo.der, valor)
+        return nodo
+    
+    def buscar(self, valor):
+        return self._buscar(self.raiz, valor)
+    
+    def _buscar(self, nodo, valor):
+        if nodo is None or nodo.valor == valor:
+            return nodo
+        if valor &lt; nodo.valor:
+            return self._buscar(nodo.izq, valor)
+        return self._buscar(nodo.der, valor)
+</code></pre>
+
+    <h4>Recorridos de un árbol binario</h4>
+<pre><code>def inorden(nodo):
+    """Izquierda → Raíz → Derecha  (en ABB produce orden ascendente)"""
+    if nodo:
+        inorden(nodo.izq)
+        print(nodo.valor, end=" ")
+        inorden(nodo.der)
+
+def preorden(nodo):
+    """Raíz → Izquierda → Derecha"""
+    if nodo:
+        print(nodo.valor, end=" ")
+        preorden(nodo.izq)
+        preorden(nodo.der)
+
+def postorden(nodo):
+    """Izquierda → Derecha → Raíz"""
+    if nodo:
+        postorden(nodo.izq)
+        postorden(nodo.der)
+        print(nodo.valor, end=" ")
+</code></pre>
+
+    <h3>4.1.3 Aplicaciones de los árboles</h3>
+    <ul>
+      <li>Sistemas de archivos (directorios).</li>
+      <li>Árboles de decisión y de expresión.</li>
+      <li>Índices en bases de datos (B-trees).</li>
+      <li>Huffman coding (compresión).</li>
+      <li>Inteligencia artificial (árboles de juego).</li>
+    </ul>
+
+    <h3>Ejemplo completo de uso</h3>
+<pre><code>arbol = ABB()
+for v in [50, 30, 70, 20, 40, 60, 80]:
+    arbol.insertar(v)
+
+print("Inorden:", end=" ")
+inorden(arbol.raiz)          # 20 30 40 50 60 70 80
+
+print("\n¿Existe 40?", arbol.buscar(40) is not None)  # True
+print("¿Existe 99?", arbol.buscar(99) is not None)  # False
+</code></pre>
+
+    <!-- 4.2 Grafos -->
+    <h2 id="4-2">4.2 Grafos</h2>
+    <p>
+      Un <strong>grafo</strong> G = (V, E) está formado por un conjunto de vértices V 
+      y un conjunto de aristas E que conectan pares de vértices. Pueden ser dirigidos o no dirigidos, 
+      ponderados o no ponderados.
+    </p>
+
+    <h3>4.2.1 Representación de grafos</h3>
+    <ul>
+      <li><strong>Matriz de adyacencia</strong>: matriz |V| × |V|. Buena para grafos densos.</li>
+      <li><strong>Lista de adyacencia</strong>: diccionario o lista de listas. Buena para grafos dispersos.</li>
+    </ul>
+
+    <h3>Representación con lista de adyacencia (Python)</h3>
+<pre><code>from collections import defaultdict
+
+class Grafo:
+    def __init__(self, dirigido=False):
+        self.ady = defaultdict(list)
+        self.dirigido = dirigido
+    
+    def agregar_arista(self, u, v, peso=1):
+        self.ady[u].append((v, peso))
+        if not self.dirigido:
+            self.ady[v].append((u, peso))
+    
+    def mostrar(self):
+        for vertice in self.ady:
+            print(f"{vertice}: {self.ady[vertice]}")
+</code></pre>
+
+    <h3>4.2.2 Operaciones básicas y recorridos</h3>
+
+    <h4>BFS – Recorrido en anchura</h4>
+<pre><code>from collections import deque
+
+def bfs(grafo, inicio):
+    visitados = set()
+    cola = deque([inicio])
+    visitados.add(inicio)
+    orden = []
+    
+    while cola:
+        actual = cola.popleft()
+        orden.append(actual)
+        for vecino, _ in grafo.ady[actual]:
+            if vecino not in visitados:
+                visitados.add(vecino)
+                cola.append(vecino)
+    return orden
+</code></pre>
+
+    <h4>DFS – Recorrido en profundidad</h4>
+<pre><code>def dfs(grafo, inicio, visitados=None):
+    if visitados is None:
+        visitados = set()
+    visitados.add(inicio)
+    orden = [inicio]
+    for vecino, _ in grafo.ady[inicio]:
+        if vecino not in visitados:
+            orden.extend(dfs(grafo, vecino, visitados))
+    return orden
+</code></pre>
+
+    <h4>Algoritmo de Dijkstra (camino mínimo)</h4>
+<pre><code>import heapq
+
+def dijkstra(grafo, origen):
+    dist = {v: float('inf') for v in grafo.ady}
+    dist[origen] = 0
+    pq = [(0, origen)]          # (distancia, vértice)
+    
+    while pq:
+        d_actual, u = heapq.heappop(pq)
+        if d_actual &gt; dist[u]:
+            continue
+        for v, peso in grafo.ady[u]:
+            nueva = d_actual + peso
+            if nueva &lt; dist[v]:
+                dist[v] = nueva
+                heapq.heappush(pq, (nueva, v))
+    return dist
+</code></pre>
+
+    <h3>Ejemplo de uso de grafos</h3>
+<pre><code>g = Grafo(dirigido=False)
+g.agregar_arista("A", "B", 4)
+g.agregar_arista("A", "C", 2)
+g.agregar_arista("B", "C", 1)
+g.agregar_arista("B", "D", 5)
+g.agregar_arista("C", "D", 8)
+g.agregar_arista("C", "E", 10)
+g.agregar_arista("D", "E", 2)
+
+print("BFS desde A:", bfs(g, "A"))
+print("DFS desde A:", dfs(g, "A"))
+print("Distancias desde A:", dijkstra(g, "A"))
+</code></pre>
+
+    <h3>Ejercicios</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio 4.1</strong>
+      Implementa la eliminación de un nodo en un ABB (considera los tres casos: hoja, un hijo, dos hijos).
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 4.2</strong>
+      Crea un grafo que modele 5 ciudades de tu estado con distancias aproximadas. 
+      Usa Dijkstra para encontrar el camino más corto entre dos ciudades.
+    </div>
+
+    <!-- Práctica -->
+    <h2>Práctica del Tema 4</h2>
+    <div class="practice">
+      <strong>🧪 Práctica 4 – Árboles y Grafos</strong>
+      <p>Abre el notebook <a href="../notebooks/04_practica_no_lineales.ipynb" class="jupyter-badge">📓 04_practica_no_lineales.ipynb</a></p>
+      <ol>
+        <li>Construye un ABB a partir de una lista de números e imprime los tres recorridos.</li>
+        <li>Implementa el algoritmo del viajero (camino mínimo) sobre un grafo ponderado de al menos 6 vértices.</li>
+        <li>Modela una sección de tu estado de origen como grafo y calcula caminos más cortos con Dijkstra.</li>
+      </ol>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="03-estructuras-lineales.html" class="btn btn-outline">← Tema 3</a>
+      <a href="05-ordenamiento.html" class="btn btn-primary">Siguiente: Métodos de ordenamiento →</a>
+    </div>
+      </main>
+
+  <footer>
+    <p>Tema 4 · Estructura de Datos (AED-1026) · Tecnológico Nacional de México</p>
+        <p>© 2026 TecNM · Adaptado a Python + Jupyter · Autor: Fabián Soberanes Matín</p>
+  </footer>
+</body>
+</html>

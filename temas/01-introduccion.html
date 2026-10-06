@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1. Introducción a las estructuras de datos | AED-1026</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">📚 Estructura de Datos <span>AED-1026</span></a>
+      <nav>
+        <a href="../index.html">Inicio</a>
+        <a href="../index.html#temario">Temario</a>
+        <a href="../notebooks/">Notebooks</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> › Tema 1</div>
+      <h1>1. Introducción a las estructuras de datos</h1>
+    </div>
+  </div>
+
+  <main class="container content">
+    <p>
+      Este tema sienta las bases del curso. Aprenderás a clasificar las estructuras de datos, 
+      entender los Tipos de Datos Abstractos (TDA), cómo se gestiona la memoria y cómo analizar 
+      la eficiencia de los algoritmos mediante la complejidad temporal y espacial.
+    </p>
+
+    <h2>Subtemas</h2>
+    <ul class="subtema-list">
+      <li><a href="#1-1"><span class="num">1.1</span> Clasificación de las estructuras de datos</a></li>
+      <li><a href="#1-2"><span class="num">1.2</span> Tipos de datos abstractos (TDA)</a></li>
+      <li><a href="#1-3"><span class="num">1.3</span> Ejemplos de TDA’s</a></li>
+      <li><a href="#1-4"><span class="num">1.4</span> Manejo de memoria (estática y dinámica)</a></li>
+      <li><a href="#1-5"><span class="num">1.5</span> Análisis de algoritmos</a></li>
+    </ul>
+
+    <!-- 1.1 -->
+    <h2 id="1-1">1.1 Clasificación de las estructuras de datos</h2>
+    <p>
+      Una <strong>estructura de datos</strong> es una forma particular de organizar y almacenar datos 
+      en una computadora para que puedan ser usados de manera eficiente. Según su organización 
+      se clasifican principalmente en:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Características</th>
+          <th>Ejemplos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Lineales</strong></td>
+          <td>Los elementos se organizan de forma secuencial. Cada elemento tiene un único predecesor y un único sucesor (excepto extremos).</td>
+          <td>Arrays, Listas, Pilas, Colas</td>
+        </tr>
+        <tr>
+          <td><strong>No lineales</strong></td>
+          <td>Los elementos se organizan de forma jerárquica o en red. Un elemento puede tener varios predecesores o sucesores.</td>
+          <td>Árboles, Grafos</td>
+        </tr>
+        <tr>
+          <td><strong>Estáticas</strong></td>
+          <td>Tamaño fijo definido en tiempo de compilación o al crear la estructura. No crecen ni se reducen.</td>
+          <td>Arrays / vectores</td>
+        </tr>
+        <tr>
+          <td><strong>Dinámicas</strong></td>
+          <td>Tamaño variable. Crecen o se reducen en tiempo de ejecución según se necesite.</td>
+          <td>Listas enlazadas, Árboles, Grafos</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      <strong>💡 Tip</strong>
+      En Python las listas (<code class="inline-code">list</code>) son dinámicas y redimensionables, 
+      mientras que las tuplas (<code class="inline-code">tuple</code>) y los arrays de NumPy de tamaño fijo 
+      se comportan más como estructuras estáticas.
+    </div>
+
+    <h3>Ejemplo: Clasificación en código</h3>
+<pre><code># Estructura lineal estática (simulada con lista de tamaño fijo)
+capacidad = 5
+vector = [None] * capacidad   # tamaño fijo
+
+# Estructura lineal dinámica
+lista_dinamica = []           # crece según se necesite
+lista_dinamica.append(10)
+lista_dinamica.append(20)
+
+print("Vector estático:", vector)
+print("Lista dinámica:", lista_dinamica)
+</code></pre>
+
+    <!-- 1.2 -->
+    <h2 id="1-2">1.2 Tipos de datos abstractos (TDA)</h2>
+    <p>
+      Un <strong>Tipo de Dato Abstracto (TDA)</strong> es un modelo matemático que define un conjunto 
+      de datos y las operaciones que se pueden realizar sobre ellos, <em>sin especificar cómo se 
+      implementan internamente</em>.
+    </p>
+    <p>
+      La idea clave es la <strong>abstracción</strong> y el <strong>encapsulamiento</strong>: 
+      el usuario del TDA solo conoce la interfaz (qué operaciones puede hacer), no la representación 
+      interna de los datos.
+    </p>
+
+    <h3>Componentes de un TDA</h3>
+    <ol>
+      <li><strong>Dominio</strong>: el conjunto de valores posibles.</li>
+      <li><strong>Operaciones</strong>: las funciones o métodos que se pueden aplicar.</li>
+      <li><strong>Axiomas / precondiciones</strong>: reglas que deben cumplirse.</li>
+    </ol>
+
+    <div class="note">
+      <strong>📌 En programación orientada a objetos</strong>
+      Un TDA se implementa típicamente como una <strong>clase</strong>. Los atributos representan 
+      el estado interno y los métodos representan las operaciones públicas.
+    </div>
+
+    <!-- 1.3 -->
+    <h2 id="1-3">1.3 Ejemplos de TDA’s</h2>
+    <p>Veamos un TDA simple: una <strong>Pila (Stack)</strong> definida de forma abstracta.</p>
+
+    <table>
+      <thead>
+        <tr><th>Operación</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>crear()</code></td><td>Crea una pila vacía</td></tr>
+        <tr><td><code>apilar(x)</code></td><td>Inserta el elemento x en el tope</td></tr>
+        <tr><td><code>desapilar()</code></td><td>Elimina y devuelve el elemento del tope</td></tr>
+        <tr><td><code>cima()</code></td><td>Devuelve el elemento del tope sin eliminarlo</td></tr>
+        <tr><td><code>esta_vacia()</code></td><td>Indica si la pila no tiene elementos</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Implementación simple de un TDA Pila en Python</h3>
+<pre><code>class Pila:
+    """TDA Pila implementado con una lista de Python."""
+    
+    def __init__(self):
+        self._elementos = []          # representación interna (privada)
+    
+    def apilar(self, x):
+        self._elementos.append(x)
+    
+    def desapilar(self):
+        if self.esta_vacia():
+            raise IndexError("La pila está vacía")
+        return self._elementos.pop()
+    
+    def cima(self):
+        if self.esta_vacia():
+            raise IndexError("La pila está vacía")
+        return self._elementos[-1]
+    
+    def esta_vacia(self):
+        return len(self._elementos) == 0
+    
+    def __len__(self):
+        return len(self._elementos)
+
+
+# Uso del TDA
+p = Pila()
+p.apilar(10)
+p.apilar(20)
+p.apilar(30)
+print("Cima:", p.cima())          # 30
+print("Desapilado:", p.desapilar())  # 30
+print("¿Vacía?", p.esta_vacia())  # False
+</code></pre>
+
+    <h3>Ejercicio 1.3</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio</strong>
+      Implementa un TDA <code class="inline-code">Cola</code> (Queue) con las operaciones:
+      <code>encolar(x)</code>, <code>desencolar()</code>, <code>frente()</code> y <code>esta_vacia()</code>.
+      Usa una lista de Python internamente. Prueba el TDA con al menos 5 operaciones.
+    </div>
+
+    <!-- 1.4 -->
+    <h2 id="1-4">1.4 Manejo de memoria</h2>
+    <h3>1.4.1 Memoria estática</h3>
+    <p>
+      El tamaño se conoce en tiempo de compilación (o al crear el objeto) y no cambia. 
+      Ejemplo clásico: un arreglo de tamaño fijo.
+    </p>
+<pre><code># Simulación de memoria estática en Python
+CAPACIDAD = 8
+arreglo = [0] * CAPACIDAD   # reserva fija de 8 enteros
+
+def insertar_estatico(arreglo, valor, posicion):
+    if 0 <= posicion < len(arreglo):
+        arreglo[posicion] = valor
+    else:
+        raise IndexError("Posición fuera de rango")
+
+insertar_estatico(arreglo, 42, 3)
+print(arreglo)
+</code></pre>
+
+    <h3>1.4.2 Memoria dinámica</h3>
+    <p>
+      La memoria se solicita y libera en tiempo de ejecución. En lenguajes como C/C++ se usa 
+      <code>malloc/new</code> y <code>free/delete</code>. En Python el manejador de memoria 
+      (garbage collector) se encarga automáticamente.
+    </p>
+<pre><code># Memoria dinámica: la lista crece según se necesite
+dinamica = []
+for i in range(5):
+    dinamica.append(i * 10)   # cada append puede reasignar memoria interna
+print(dinamica)
+
+# También podemos reducir
+dinamica.pop()
+print("Después de pop:", dinamica)
+</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ Ventajas y desventajas</strong>
+      <ul>
+        <li><strong>Estática</strong>: acceso muy rápido (O(1)), pero desperdicia memoria si no se usa toda la capacidad.</li>
+        <li><strong>Dinámica</strong>: usa solo la memoria necesaria, pero las operaciones de inserción/eliminación 
+            pueden ser más costosas y hay overhead de punteros.</li>
+      </ul>
+    </div>
+
+    <h3>Ejercicio 1.4</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio</strong>
+      Escribe un programa que genere un vector de tamaño <code>n</code> (ingresado por el usuario) 
+      en tiempo de ejecución y lo llene con números aleatorios. Luego crea una lista dinámica 
+      y copia solo los valores pares del vector. Imprime ambas estructuras.
+    </div>
+
+    <!-- 1.5 -->
+    <h2 id="1-5">1.5 Análisis de algoritmos</h2>
+    <p>
+      El análisis de algoritmos nos permite predecir el comportamiento de un programa 
+      en términos de <strong>tiempo</strong> y <strong>espacio</strong> (memoria) 
+      en función del tamaño de la entrada (<em>n</em>).
+    </p>
+
+    <h3>1.5.1 Complejidad en el tiempo</h3>
+    <p>
+      Se expresa con la notación <strong>Big-O</strong> (O grande), que indica el orden 
+      de crecimiento del tiempo de ejecución en el peor caso.
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>Notación</th><th>Nombre</th><th>Ejemplo típico</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>O(1)</td><td>Constante</td><td>Acceso a un índice de arreglo</td></tr>
+        <tr><td>O(log n)</td><td>Logarítmica</td><td>Búsqueda binaria</td></tr>
+        <tr><td>O(n)</td><td>Lineal</td><td>Recorrer una lista</td></tr>
+        <tr><td>O(n log n)</td><td>Lineal-logarítmica</td><td>Merge sort, Quicksort promedio</td></tr>
+        <tr><td>O(n²)</td><td>Cuadrática</td><td>Burbuja, selección</td></tr>
+        <tr><td>O(2ⁿ)</td><td>Exponencial</td><td>Algunos algoritmos recursivos ingenuos</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ejemplo: medir tiempo de dos algoritmos</h3>
+<pre><code>import time
+
+def suma_lineal(n):
+    """Suma de 1 a n – O(n)"""
+    total = 0
+    for i in range(1, n + 1):
+        total += i
+    return total
+
+def suma_constante(n):
+    """Fórmula de Gauss – O(1)"""
+    return n * (n + 1) // 2
+
+n = 10_000_000
+
+inicio = time.perf_counter()
+r1 = suma_lineal(n)
+t1 = time.perf_counter() - inicio
+
+inicio = time.perf_counter()
+r2 = suma_constante(n)
+t2 = time.perf_counter() - inicio
+
+print(f"Lineal  → resultado={r1}, tiempo={t1:.6f}s")
+print(f"Constante → resultado={r2}, tiempo={t2:.6f}s")
+</code></pre>
+
+    <h3>1.5.2 Complejidad en el espacio</h3>
+    <p>
+      Mide la cantidad de memoria adicional que necesita el algoritmo en función de <em>n</em>.
+      Un algoritmo que solo usa unas cuantas variables auxiliares es O(1) en espacio; 
+      uno que crea una lista del tamaño de la entrada es O(n).
+    </p>
+
+    <h3>1.5.3 Eficiencia de los algoritmos</h3>
+    <p>
+      La eficiencia combina tiempo y espacio. En la práctica se busca el mejor equilibrio 
+      según el problema (a veces se prefiere más memoria para ganar velocidad).
+    </p>
+
+    <h3>Ejercicio 1.5</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio</strong>
+      Implementa dos formas de calcular el factorial de un número: una iterativa y una recursiva. 
+      Mide el tiempo de ambas para n = 20 y n = 100 (cuidado con la recursión profunda). 
+      Elabora un pequeño cuadro comparativo.
+    </div>
+
+    <!-- Práctica del tema -->
+    <h2>Práctica del Tema 1</h2>
+    <div class="practice">
+      <strong>🧪 Práctica 1 – TDA y análisis de complejidad</strong>
+      <p>Abre el notebook <a href="../notebooks/01_practica_introduccion.ipynb" class="jupyter-badge">📓 01_practica_introduccion.ipynb</a></p>
+      <ol>
+        <li>Implementa un TDA <strong>Conjunto</strong> (Set) con las operaciones: 
+            <code>agregar</code>, <code>eliminar</code>, <code>pertenece</code>, <code>union</code>, <code>interseccion</code>.</li>
+        <li>Compara la eficiencia (tiempo) de buscar un elemento en una lista vs. en un conjunto de Python 
+            para tamaños 1 000, 10 000 y 100 000.</li>
+        <li>Documenta en el notebook las complejidades teóricas y los tiempos medidos.</li>
+      </ol>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="../index.html" class="btn btn-outline">← Inicio</a>
+      <a href="02-recursividad.html" class="btn btn-primary">Siguiente: Recursividad →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Tema 1 · Estructura de Datos (AED-1026) · Tecnológico Nacional de México</p>
+        <p>© 2026 TecNM · Adaptado a Python + Jupyter · Autor: Fabián Soberanes Matín</p>
+  </footer>
+</body>
+</html>

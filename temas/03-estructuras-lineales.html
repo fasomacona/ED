@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3. Estructuras lineales | AED-1026</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">📚 Estructura de Datos <span>AED-1026</span></a>
+      <nav>
+        <a href="../index.html">Inicio</a>
+        <a href="../index.html#temario">Temario</a>
+        <a href="../notebooks/">Notebooks</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> › Tema 3</div>
+      <h1>3. Estructuras lineales</h1>
+    </div>
+  </div>
+
+  <main class="container content">
+    <p>
+      Las estructuras lineales organizan los datos de forma secuencial. En este tema estudiaremos 
+      <strong>pilas</strong>, <strong>colas</strong> y <strong>listas enlazadas</strong>, 
+      tanto con representación estática (arreglos) como dinámica (nodos/referencias).
+    </p>
+
+    <h2>Subtemas</h2>
+    <ul class="subtema-list">
+      <li><a href="#3-1"><span class="num">3.1</span> Pilas</a></li>
+      <li><a href="#3-2"><span class="num">3.2</span> Colas</a></li>
+      <li><a href="#3-3"><span class="num">3.3</span> Listas</a></li>
+    </ul>
+
+    <!-- 3.1 Pilas -->
+    <h2 id="3-1">3.1 Pilas (Stack)</h2>
+    <p>
+      Una pila es una estructura LIFO (<strong>Last In, First Out</strong>): 
+      el último elemento que entra es el primero que sale. Piensa en una pila de platos.
+    </p>
+
+    <h3>3.1.1 Representación en memoria</h3>
+    <ul>
+      <li><strong>Estática</strong>: con un arreglo de tamaño fijo y un índice <code>tope</code>.</li>
+      <li><strong>Dinámica</strong>: con una lista enlazada o la lista de Python.</li>
+    </ul>
+
+    <h3>3.1.2 Operaciones básicas</h3>
+    <table>
+      <thead><tr><th>Operación</th><th>Descripción</th><th>Complejidad</th></tr></thead>
+      <tbody>
+        <tr><td>push / apilar</td><td>Inserta en el tope</td><td>O(1)</td></tr>
+        <tr><td>pop / desapilar</td><td>Elimina y devuelve el tope</td><td>O(1)</td></tr>
+        <tr><td>peek / cima</td><td>Consulta el tope sin eliminar</td><td>O(1)</td></tr>
+        <tr><td>isEmpty</td><td>¿Está vacía?</td><td>O(1)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Implementación con arreglo (estática)</h3>
+<pre><code>class PilaEstatica:
+    def __init__(self, capacidad=10):
+        self.capacidad = capacidad
+        self.datos = [None] * capacidad
+        self.tope = -1                    # índice del último elemento
+    
+    def apilar(self, x):
+        if self.tope + 1 == self.capacidad:
+            raise OverflowError("Pila llena")
+        self.tope += 1
+        self.datos[self.tope] = x
+    
+    def desapilar(self):
+        if self.esta_vacia():
+            raise IndexError("Pila vacía")
+        valor = self.datos[self.tope]
+        self.datos[self.tope] = None
+        self.tope -= 1
+        return valor
+    
+    def cima(self):
+        if self.esta_vacia():
+            raise IndexError("Pila vacía")
+        return self.datos[self.tope]
+    
+    def esta_vacia(self):
+        return self.tope == -1
+
+# Prueba
+p = PilaEstatica(5)
+p.apilar("A")
+p.apilar("B")
+print(p.desapilar())   # B
+</code></pre>
+
+    <h3>Implementación dinámica (recomendada en Python)</h3>
+<pre><code>class Pila:
+    def __init__(self):
+        self._items = []
+    
+    def apilar(self, x):
+        self._items.append(x)
+    
+    def desapilar(self):
+        if not self._items:
+            raise IndexError("Pila vacía")
+        return self._items.pop()
+    
+    def cima(self):
+        return self._items[-1]
+    
+    def esta_vacia(self):
+        return len(self._items) == 0
+</code></pre>
+
+    <h3>3.1.3 Aplicaciones de las pilas</h3>
+    <ul>
+      <li>Evaluación de expresiones (notación postfija).</li>
+      <li>Balanceo de paréntesis / corchetes.</li>
+      <li>Historial de navegación (atrás).</li>
+      <li>Llamadas a funciones (call stack).</li>
+      <li>Deshacer (undo) en editores.</li>
+    </ul>
+
+    <h3>Ejemplo: verificar paréntesis balanceados</h3>
+<pre><code>def parentesis_balanceados(expresion):
+    pila = []
+    pares = {')': '(', ']': '[', '}': '{'}
+    for car in expresion:
+        if car in '([{':
+            pila.append(car)
+        elif car in ')]}':
+            if not pila or pila[-1] != pares[car]:
+                return False
+            pila.pop()
+    return len(pila) == 0
+
+print(parentesis_balanceados("((a+b)*[c-d])"))   # True
+print(parentesis_balanceados("((a+b])"))         # False
+</code></pre>
+
+    <!-- 3.2 Colas -->
+    <h2 id="3-2">3.2 Colas (Queue)</h2>
+    <p>
+      Una cola es FIFO (<strong>First In, First Out</strong>): el primero que llega es el primero que sale. 
+      Como la fila del cine.
+    </p>
+
+    <h3>3.2.1 – 3.2.2 Representación y operaciones</h3>
+    <table>
+      <thead><tr><th>Operación</th><th>Descripción</th><th>Complejidad</th></tr></thead>
+      <tbody>
+        <tr><td>enqueue / encolar</td><td>Inserta al final</td><td>O(1)*</td></tr>
+        <tr><td>dequeue / desencolar</td><td>Elimina del frente</td><td>O(1)*</td></tr>
+        <tr><td>front / frente</td><td>Consulta el frente</td><td>O(1)</td></tr>
+      </tbody>
+    </table>
+    <p><small>* Con implementación circular o collections.deque</small></p>
+
+    <h3>Implementación simple (lista)</h3>
+<pre><code>from collections import deque
+
+class Cola:
+    def __init__(self):
+        self._items = deque()          # más eficiente que list.pop(0)
+    
+    def encolar(self, x):
+        self._items.append(x)
+    
+    def desencolar(self):
+        if not self._items:
+            raise IndexError("Cola vacía")
+        return self._items.popleft()
+    
+    def frente(self):
+        return self._items[0]
+    
+    def esta_vacia(self):
+        return len(self._items) == 0
+</code></pre>
+
+    <h3>3.2.3 Tipos de colas</h3>
+    <ul>
+      <li><strong>Simple</strong>: FIFO clásico.</li>
+      <li><strong>Circular</strong>: el final se conecta con el inicio (aprovecha el espacio del arreglo).</li>
+      <li><strong>Bicola (Deque)</strong>: se puede insertar y eliminar por ambos extremos.</li>
+      <li><strong>De prioridad</strong>: los elementos salen según su prioridad, no solo por orden de llegada.</li>
+    </ul>
+
+    <h3>Cola circular (con arreglo)</h3>
+<pre><code>class ColaCircular:
+    def __init__(self, capacidad):
+        self.capacidad = capacidad
+        self.datos = [None] * capacidad
+        self.frente = 0
+        self.final = -1
+        self.tamano = 0
+    
+    def encolar(self, x):
+        if self.tamano == self.capacidad:
+            raise OverflowError("Cola llena")
+        self.final = (self.final + 1) % self.capacidad
+        self.datos[self.final] = x
+        self.tamano += 1
+    
+    def desencolar(self):
+        if self.tamano == 0:
+            raise IndexError("Cola vacía")
+        valor = self.datos[self.frente]
+        self.frente = (self.frente + 1) % self.capacidad
+        self.tamano -= 1
+        return valor
+</code></pre>
+
+    <h3>3.2.4 Aplicaciones</h3>
+    <ul>
+      <li>Cola de impresión / procesos del sistema operativo.</li>
+      <li>Simulación de filas (banco, restaurante, aeropuerto).</li>
+      <li>BFS (recorrido en anchura de grafos).</li>
+      <li>Buffers de datos.</li>
+    </ul>
+
+    <!-- 3.3 Listas -->
+    <h2 id="3-3">3.3 Listas enlazadas</h2>
+    <p>
+      Una lista enlazada es una secuencia de nodos donde cada nodo contiene un dato y una 
+      referencia (puntero) al siguiente nodo. No requiere memoria contigua.
+    </p>
+
+    <h3>Nodo básico</h3>
+<pre><code>class Nodo:
+    def __init__(self, dato):
+        self.dato = dato
+        self.siguiente = None
+</code></pre>
+
+    <h3>Lista simplemente enlazada</h3>
+<pre><code>class ListaSimple:
+    def __init__(self):
+        self.cabeza = None
+    
+    def insertar_inicio(self, dato):
+        nuevo = Nodo(dato)
+        nuevo.siguiente = self.cabeza
+        self.cabeza = nuevo
+    
+    def insertar_final(self, dato):
+        nuevo = Nodo(dato)
+        if not self.cabeza:
+            self.cabeza = nuevo
+            return
+        actual = self.cabeza
+        while actual.siguiente:
+            actual = actual.siguiente
+        actual.siguiente = nuevo
+    
+    def eliminar(self, dato):
+        if not self.cabeza:
+            return
+        if self.cabeza.dato == dato:
+            self.cabeza = self.cabeza.siguiente
+            return
+        actual = self.cabeza
+        while actual.siguiente and actual.siguiente.dato != dato:
+            actual = actual.siguiente
+        if actual.siguiente:
+            actual.siguiente = actual.siguiente.siguiente
+    
+    def mostrar(self):
+        actual = self.cabeza
+        elementos = []
+        while actual:
+            elementos.append(str(actual.dato))
+            actual = actual.siguiente
+        print(" → ".join(elementos) if elementos else "Lista vacía")
+
+# Uso
+lista = ListaSimple()
+lista.insertar_final(10)
+lista.insertar_final(20)
+lista.insertar_inicio(5)
+lista.mostrar()          # 5 → 10 → 20
+lista.eliminar(10)
+lista.mostrar()          # 5 → 20
+</code></pre>
+
+    <h3>Tipos de listas</h3>
+    <ul>
+      <li><strong>Simplemente enlazada</strong>: cada nodo apunta solo al siguiente.</li>
+      <li><strong>Doblemente enlazada</strong>: cada nodo tiene puntero al anterior y al siguiente.</li>
+      <li><strong>Circular</strong>: el último nodo apunta de nuevo al primero.</li>
+    </ul>
+
+    <h3>Ejercicios</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio 3.1</strong>
+      Implementa una pila que pueda devolver el elemento mínimo en O(1) (pista: usa una pila auxiliar).
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 3.2</strong>
+      Simula la cola de un banco: los clientes llegan con un número de ticket y se atienden en orden. 
+      Muestra el estado de la cola después de cada operación.
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 3.3</strong>
+      Extiende la lista simplemente enlazada para que tenga un método <code>buscar(dato)</code> 
+      que devuelva True/False y un método <code>longitud()</code>.
+    </div>
+
+    <!-- Práctica -->
+    <h2>Práctica del Tema 3</h2>
+    <div class="practice">
+      <strong>🧪 Práctica 3 – Estructuras lineales</strong>
+      <p>Abre el notebook <a href="../notebooks/03_practica_lineales.ipynb" class="jupyter-badge">📓 03_practica_lineales.ipynb</a></p>
+      <ol>
+        <li>Simula el historial de un navegador web (atrás/adelante) usando dos pilas.</li>
+        <li>Implementa una cola de prioridad simple para la salida de aviones (prioridad 1 = emergencia, 2 = regular, 3 = carga).</li>
+        <li>Crea una lista doblemente enlazada y realiza inserciones y eliminaciones por ambos extremos.</li>
+      </ol>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="02-recursividad.html" class="btn btn-outline">← Tema 2</a>
+      <a href="04-estructuras-no-lineales.html" class="btn btn-primary">Siguiente: Estructuras no lineales →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Tema 3 · Estructura de Datos (AED-1026) · Tecnológico Nacional de México</p>
+        <p>© 2026 TecNM · Adaptado a Python + Jupyter · Autor: Fabián Soberanes Matín</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2. Recursividad | AED-1026</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">📚 Estructura de Datos <span>AED-1026</span></a>
+      <nav>
+        <a href="../index.html">Inicio</a>
+        <a href="../index.html#temario">Temario</a>
+        <a href="../notebooks/">Notebooks</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> › Tema 2</div>
+      <h1>2. Recursividad</h1>
+    </div>
+  </div>
+
+  <main class="container content">
+    <p>
+      La recursividad es una técnica poderosa donde una función se llama a sí misma para resolver 
+      un problema. Es especialmente útil en estructuras no lineales (árboles y grafos) y en 
+      algoritmos de “divide y vencerás”.
+    </p>
+
+    <h2>Subtemas</h2>
+    <ul class="subtema-list">
+      <li><a href="#2-1"><span class="num">2.1</span> Definición</a></li>
+      <li><a href="#2-2"><span class="num">2.2</span> Procedimientos recursivos</a></li>
+      <li><a href="#2-3"><span class="num">2.3</span> Ejemplos de casos recursivos</a></li>
+    </ul>
+
+    <!-- 2.1 -->
+    <h2 id="2-1">2.1 Definición</h2>
+    <p>
+      Una función es <strong>recursiva</strong> cuando se define en términos de sí misma. 
+      Toda función recursiva debe tener:
+    </p>
+    <ol>
+      <li><strong>Caso base</strong> (condición de salida): el caso más simple que se resuelve directamente.</li>
+      <li><strong>Caso recursivo</strong>: reduce el problema a una versión más pequeña del mismo problema.</li>
+    </ol>
+
+    <div class="note">
+      <strong>📌 Analogía</strong>
+      Imagina las muñecas rusas (matrioskas): cada muñeca contiene una más pequeña hasta llegar 
+      a la más pequeña (caso base).
+    </div>
+
+    <h3>Estructura general</h3>
+<pre><code>def funcion_recursiva(parametro):
+    if condicion_de_parada:          # caso base
+        return valor_base
+    else:
+        # trabajo + llamada recursiva con problema más pequeño
+        return funcion_recursiva(parametro_reducido)
+</code></pre>
+
+    <!-- 2.2 -->
+    <h2 id="2-2">2.2 Procedimientos recursivos</h2>
+    <p>
+      En la práctica, la recursión se implementa mediante la <strong>pila de llamadas</strong> 
+      (call stack). Cada llamada guarda su propio contexto (variables locales y dirección de retorno).
+    </p>
+
+    <h3>Ventajas</h3>
+    <ul>
+      <li>Código más limpio y cercano a la definición matemática del problema.</li>
+      <li>Ideal para problemas que se dividen naturalmente (árboles, backtracking, divide y vencerás).</li>
+    </ul>
+
+    <h3>Desventajas</h3>
+    <ul>
+      <li>Puede consumir mucha memoria de pila (riesgo de <em>stack overflow</em>).</li>
+      <li>A veces es más lenta que la versión iterativa equivalente.</li>
+      <li>Más difícil de depurar si no se controlan bien los casos base.</li>
+    </ul>
+
+    <div class="warning">
+      <strong>⚠️ Importante</strong>
+      Siempre asegúrate de que cada llamada recursiva se acerque al caso base. 
+      Si no lo hace, la recursión será infinita.
+    </div>
+
+    <!-- 2.3 -->
+    <h2 id="2-3">2.3 Ejemplos de casos recursivos</h2>
+
+    <h3>Ejemplo 1: Factorial</h3>
+    <p>n! = n × (n-1)! &nbsp;&nbsp; con &nbsp; 0! = 1</p>
+<pre><code>def factorial(n):
+    if n == 0 or n == 1:          # caso base
+        return 1
+    return n * factorial(n - 1)   # caso recursivo
+
+print(factorial(5))   # 120
+print(factorial(0))   # 1
+</code></pre>
+
+    <h3>Ejemplo 2: Serie de Fibonacci</h3>
+    <p>F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)</p>
+<pre><code>def fibonacci(n):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# Cuidado: esta versión es O(2^n) – muy lenta para n grandes
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")
+</code></pre>
+
+    <div class="tip">
+      <strong>💡 Mejora con memoización</strong>
+<pre><code>from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fib_rapido(n):
+    if n &lt; 2:
+        return n
+    return fib_rapido(n - 1) + fib_rapido(n - 2)
+
+print(fib_rapido(40))   # instantáneo
+</code></pre>
+    </div>
+
+    <h3>Ejemplo 3: Torres de Hanoi</h3>
+    <p>
+      Mover n discos de la torre A a la torre C usando la torre B como auxiliar, 
+      respetando la regla de no poner un disco grande sobre uno más pequeño.
+    </p>
+<pre><code>def hanoi(n, origen, auxiliar, destino):
+    if n == 1:
+        print(f"Mover disco 1 de {origen} a {destino}")
+        return
+    hanoi(n - 1, origen, destino, auxiliar)
+    print(f"Mover disco {n} de {origen} a {destino}")
+    hanoi(n - 1, auxiliar, origen, destino)
+
+hanoi(3, "A", "B", "C")
+</code></pre>
+
+    <h3>Ejemplo 4: Suma de una lista (recursiva)</h3>
+<pre><code>def suma_lista(lista):
+    if not lista:                 # caso base: lista vacía
+        return 0
+    return lista[0] + suma_lista(lista[1:])
+
+print(suma_lista([1, 2, 3, 4, 5]))   # 15
+</code></pre>
+
+    <h3>Ejercicios</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio 2.1</strong>
+      Escribe una función recursiva que calcule la potencia aⁿ (a elevado a n) 
+      sin usar el operador ** ni la función pow.
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 2.2</strong>
+      Escribe una función recursiva que invierta una cadena de texto. 
+      Ejemplo: invertir("hola") → "aloh"
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 2.3</strong>
+      Escribe una función recursiva que cuente cuántos dígitos tiene un número entero positivo.
+    </div>
+
+    <!-- Práctica -->
+    <h2>Práctica del Tema 2</h2>
+    <div class="practice">
+      <strong>🧪 Práctica 2 – Recursividad</strong>
+      <p>Abre el notebook <a href="../notebooks/02_practica_recursividad.ipynb" class="jupyter-badge">📓 02_practica_recursividad.ipynb</a></p>
+      <ol>
+        <li>Implementa las Torres de Hanoi y cuenta el número mínimo de movimientos para n discos (debe ser 2ⁿ − 1).</li>
+        <li>Convierte al menos 3 algoritmos iterativos (búsqueda lineal, máximo de una lista, conteo de vocales) a su versión recursiva.</li>
+        <li>Compara el tiempo de Fibonacci ingenuo vs. Fibonacci con memoización para n = 30 y n = 35.</li>
+      </ol>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="01-introduccion.html" class="btn btn-outline">← Tema 1</a>
+      <a href="03-estructuras-lineales.html" class="btn btn-primary">Siguiente: Estructuras lineales →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Tema 2 · Estructura de Datos (AED-1026) · Tecnológico Nacional de México</p>
+        <p>© 2026 TecNM · Adaptado a Python + Jupyter · Autor: Fabián Soberanes Matín</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6. Métodos de búsqueda | AED-1026</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="../index.html" class="logo">📚 Estructura de Datos <span>AED-1026</span></a>
+      <nav>
+        <a href="../index.html">Inicio</a>
+        <a href="../index.html#temario">Temario</a>
+        <a href="../notebooks/">Notebooks</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <div class="container">
+      <div class="breadcrumb"><a href="../index.html">Inicio</a> › Tema 6</div>
+      <h1>6. Métodos de búsqueda</h1>
+    </div>
+  </div>
+
+  <main class="container content">
+    <p>
+      Buscar un elemento dentro de una colección es una de las operaciones más comunes. 
+      La eficiencia depende de cómo estén organizados los datos y del algoritmo elegido.
+    </p>
+
+    <h2>Subtemas</h2>
+    <ul class="subtema-list">
+      <li><a href="#6-1"><span class="num">6.1</span> Búsqueda secuencial</a></li>
+      <li><a href="#6-2"><span class="num">6.2</span> Búsqueda binaria</a></li>
+      <li><a href="#6-3"><span class="num">6.3</span> Búsqueda por funciones de HASH</a></li>
+    </ul>
+
+    <!-- 6.1 -->
+    <h2 id="6-1">6.1 Búsqueda secuencial (lineal)</h2>
+    <p>
+      Recorre la lista elemento por elemento hasta encontrar el valor buscado o llegar al final. 
+      Funciona con datos <strong>no ordenados</strong>. Complejidad: O(n).
+    </p>
+<pre><code>def busqueda_secuencial(lista, objetivo):
+    for i, elemento in enumerate(lista):
+        if elemento == objetivo:
+            return i          # índice donde se encontró
+    return -1                 # no encontrado
+
+datos = [15, 3, 9, 22, 7, 41, 18]
+print(busqueda_secuencial(datos, 22))   # 3
+print(busqueda_secuencial(datos, 99))   # -1
+</code></pre>
+
+    <div class="tip">
+      <strong>💡 Variante con centinela</strong>
+      Se añade el valor buscado al final de la lista para evitar comprobar el final en cada iteración. 
+      Reduce un poco el número de comparaciones.
+    </div>
+
+    <!-- 6.2 -->
+    <h2 id="6-2">6.2 Búsqueda binaria</h2>
+    <p>
+      Requiere que la lista esté <strong>ordenada</strong>. Divide el intervalo de búsqueda a la mitad 
+      en cada paso. Complejidad: O(log n).
+    </p>
+<pre><code>def busqueda_binaria(lista, objetivo):
+    izquierda = 0
+    derecha = len(lista) - 1
+    
+    while izquierda &lt;= derecha:
+        medio = (izquierda + derecha) // 2
+        if lista[medio] == objetivo:
+            return medio
+        elif lista[medio] &lt; objetivo:
+            izquierda = medio + 1
+        else:
+            derecha = medio - 1
+    return -1
+
+ordenada = [3, 7, 9, 15, 18, 22, 41]
+print(busqueda_binaria(ordenada, 22))   # 5
+print(busqueda_binaria(ordenada, 10))   # -1
+</code></pre>
+
+    <h3>Versión recursiva</h3>
+<pre><code>def busqueda_binaria_rec(lista, objetivo, izq=0, der=None):
+    if der is None:
+        der = len(lista) - 1
+    if izq &gt; der:
+        return -1
+    medio = (izq + der) // 2
+    if lista[medio] == objetivo:
+        return medio
+    if lista[medio] &lt; objetivo:
+        return busqueda_binaria_rec(lista, objetivo, medio + 1, der)
+    return busqueda_binaria_rec(lista, objetivo, izq, medio - 1)
+</code></pre>
+
+    <div class="warning">
+      <strong>⚠️ Requisito</strong>
+      La búsqueda binaria solo funciona correctamente si los datos están ordenados. 
+      Si no lo están, el resultado puede ser incorrecto.
+    </div>
+
+    <!-- 6.3 -->
+    <h2 id="6-3">6.3 Búsqueda por funciones de HASH</h2>
+    <p>
+      Una <strong>tabla hash</strong> transforma la clave en un índice mediante una función hash. 
+      El acceso promedio es O(1). Se deben manejar las <strong>colisiones</strong> 
+      (dos claves que producen el mismo índice).
+    </p>
+
+    <h3>Función hash simple (método de división)</h3>
+<pre><code>def hash_simple(clave, tamano_tabla):
+    return clave % tamano_tabla
+</code></pre>
+
+    <h3>Tabla hash con encadenamiento (listas)</h3>
+<pre><code>class TablaHash:
+    def __init__(self, capacidad=10):
+        self.capacidad = capacidad
+        self.tabla = [[] for _ in range(capacidad)]
+    
+    def _hash(self, clave):
+        return hash(clave) % self.capacidad
+    
+    def insertar(self, clave, valor):
+        indice = self._hash(clave)
+        # Actualizar si ya existe
+        for i, (k, v) in enumerate(self.tabla[indice]):
+            if k == clave:
+                self.tabla[indice][i] = (clave, valor)
+                return
+        self.tabla[indice].append((clave, valor))
+    
+    def buscar(self, clave):
+        indice = self._hash(clave)
+        for k, v in self.tabla[indice]:
+            if k == clave:
+                return v
+        return None
+    
+    def eliminar(self, clave):
+        indice = self._hash(clave)
+        for i, (k, v) in enumerate(self.tabla[indice]):
+            if k == clave:
+                del self.tabla[indice][i]
+                return True
+        return False
+
+# Uso
+th = TablaHash(7)
+th.insertar("manzana", 50)
+th.insertar("pera", 30)
+th.insertar("uva", 80)
+print(th.buscar("pera"))      # 30
+print(th.buscar("naranja"))   # None
+</code></pre>
+
+    <h3>Manejo de colisiones</h3>
+    <ul>
+      <li><strong>Encadenamiento</strong>: cada casilla es una lista (como el ejemplo anterior).</li>
+      <li><strong>Direccionamiento abierto</strong>: buscar otra casilla libre (sondeo lineal, cuadrático, doble hash).</li>
+    </ul>
+
+    <h3>Cuadro comparativo de métodos de búsqueda</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Requisito</th>
+          <th>Tiempo promedio</th>
+          <th>Tiempo peor caso</th>
+          <th>Espacio extra</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Secuencial</td><td>Ninguno</td><td>O(n)</td><td>O(n)</td><td>O(1)</td></tr>
+        <tr><td>Binaria</td><td>Datos ordenados</td><td>O(log n)</td><td>O(log n)</td><td>O(1)</td></tr>
+        <tr><td>Hash</td><td>Función hash + manejo colisiones</td><td>O(1)</td><td>O(n)</td><td>O(n)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ejercicios</h3>
+    <div class="practice">
+      <strong>✏️ Ejercicio 6.1</strong>
+      Implementa búsqueda secuencial y binaria. Genera una lista de 10 000 números, ordénala, 
+      y mide el tiempo de ambas búsquedas para 100 claves aleatorias.
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 6.2</strong>
+      Implementa una tabla hash que almacene nombres de alumnos y sus calificaciones. 
+      Realiza inserciones, búsquedas y eliminaciones.
+    </div>
+    <div class="practice">
+      <strong>✏️ Ejercicio 6.3</strong>
+      Diseña tu propio método de búsqueda (puedes combinar ideas). Documenta su complejidad 
+      teórica y realiza pruebas.
+    </div>
+
+    <!-- Práctica -->
+    <h2>Práctica del Tema 6</h2>
+    <div class="practice">
+      <strong>🧪 Práctica 6 – Métodos de búsqueda</strong>
+      <p>Abre el notebook <a href="../notebooks/06_practica_busqueda.ipynb" class="jupyter-badge">📓 06_practica_busqueda.ipynb</a></p>
+      <ol>
+        <li>Aplica los tres métodos de búsqueda a un conjunto de n datos (n = 1 000, 10 000, 50 000) 
+            y determina su eficiencia experimental.</li>
+        <li>Elabora dos cuadros comparativos: uno de complejidad temporal y otro de complejidad espacial.</li>
+        <li>Implementa tu propio método de búsqueda y compáralo con los tres clásicos.</li>
+      </ol>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="05-ordenamiento.html" class="btn btn-outline">← Tema 5</a>
+      <a href="../index.html" class="btn btn-primary">Volver al inicio →</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Tema 6 · Estructura de Datos (AED-1026) · Tecnológico Nacional de México</p>
+        <p>© 2026 TecNM · Adaptado a Python + Jupyter · Autor: Fabián Soberanes Matín</p>
+  </footer>
+</body>
+</html>
